@@ -9,15 +9,59 @@
  */
 
 /**
+ * jQuey plugin to call the KWICK! Social Platform API.
  *
+ * Since the API supports cross origin request sharing we can do all stuuf
+ * direct in JavaScript without any proxy stuff.
  */
-(function($) {
+(function($, global) {
     var settings, kapi;
 
+    /**
+     * Utilizes firebug console if available.
+     * Logging could be enabled by $.kapi() options.
+     */
+    function log(msg) {
+        if (!settings.debug) {
+            return;
+        }
+
+        if (global.console && global.console.log && $.isFunction(global.console.log)) {
+            global.console.log(msg);
+        }
+    }
+
+    /**
+     * Utilizes firebug console if available.
+     * Debugging could be enabled by $.kapi() options.
+     */
+    function debug() {
+        if (!settings.debug) {
+            return;
+        }
+
+        if (global.console && global.console.debug && $.isFunction(global.console.debug)) {
+            global.console.debug.apply(null, arguments);
+        }
+    }
+
+    /**
+     * Generates the full qualified method name.
+     *
+     * @param  service String
+     * @param  method  String
+     * @return String
+     */
     function getQualifiedMethod(service, method) {
         return service + '.' + method;
     }
 
+    /**
+     * Generates the md5 hashed signature of the passed parameters.
+     *
+     * @param parameters Object
+     * @return String
+     */
     function generateSignature(parameters) {
         var parameterString = '',
             parameterNames  = [],
@@ -27,16 +71,26 @@
             $.each(parameters, function(name) {
                 parameterNames.push(name);
             });
+            log('Generating signature with: ' + parameterNames);
             sortedNames = parameterNames.sort();
             $.each(sortedNames, function(index) {
                 var name  = sortedNames[index];
                 parameterString += name + '=' + parameters[name];
             });
+            log('Plain parameter string: ' + parameterString);
         }
 
         return hex_md5(parameterString + settings.secret);
     }
 
+    /**
+     * Generates the full reuqest URI for an API call.
+     *
+     * @param  service    String
+     * @param  method     String
+     * @param  parameters Object
+     * @return String
+     */
     function generateUri(service, method, parameters) {
         var uri = settings.baseUri  + '?',
             qualifiedMethod = getQualifiedMethod(service, method);
@@ -63,7 +117,18 @@
     }
 
     /**
-     * Setup function.
+     * Setup function. Call it to set up the API client with some paramaters.
+     *
+     * Example:
+     * <code>
+     * $.kapi({
+     *     baseUri: 'http://api.kwick.de/service/2.0/', // optional, URI to the API
+     *     version: '2.0',                              // optional, version of the API
+     *     apiKey:  null,                               // REQUIRED, your API key
+     *     secret:  null,                               // REQUIRED, the API secret
+     *     debug:   false                               // optional, debuggign in firebug
+     * });
+     * </code>
      */
     kapi = function(origSettings) {
         settings = $.extend(true, {}, kapi.defaultSettings, origSettings);
@@ -76,21 +141,65 @@
         baseUri: 'http://api.kwick.de/service/2.0/',
         version: '2.0',
         apiKey:  null,
-        secret:  null
+        secret:  null,
+        debug:   false
     };
 
+    /**
+     * Determines if a given object is an API error response.
+     */
     kapi.isError = function(o) {
         return ('error_code' in o && 'error_msg' in o);
     };
 
+    /**
+     * Performs an API request.
+     * 
+     * Example:
+     * <code>
+     * $.kapi.request({
+     *     type:    'POST',          // optional, default is GET
+     *     service: 'Application',   // api service name (REQUIRED)
+     *     method:  'getAPIVersion', // api method name (REQUIRED)
+     *     params:  {                // optional api method parameters
+     *         name1: 'value1'
+     *         name2: 'value2'
+     *     },
+     *     callback: function(data) { ... } // callback function (REQUIRED)
+     *                                      // Is called with the response object as
+     *                                      // argument.
+     * });
+     * </code>
+     *
+     * @param  opt Object
+     * @return XMLHttpRequest
+     */
     kapi.request = function(opt) {
-        $.ajax({
+        if (!opt.service) {
+            $.error('No "service" property passed in the options!');
+        }
+
+        if (!opt.method) {
+            $.error('No "method" property passed in the options!');
+        }
+
+        if (!opt.callback) {
+            $.error('No "callback" function property passed in the options!');
+        }
+
+        if (!$.isFunction()) {
+            $.error('The passed callback option is not a function!');
+        }
+
+        return $.ajax({
             type:     opt.type || 'GET',
             url:      generateUri(opt.service, opt.method, opt.params),
             success: function(data) {
-                var isError = kapi.isError(data);
+                if (!$.isPlainObject(data)) {
+                    $.error('No valid object returnd by Ajax response!');
+                }
 
-                if (isError) {
+                if (kapi.isError(data)) {
                     data.toString = function() {
                         return 'Error: ' + data.error_msg + ' [' + data.error_code + ']';
                     };
@@ -99,11 +208,12 @@
                     data.isError = function() { return false; }
                 }
 
-                callback(data);
+                opt.callback(data);
             }
         });
     };
     
     // Expose plugin
     $.kapi = kapi;
-})(jQuery);
+
+})(jQuery, window);

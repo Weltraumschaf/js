@@ -175,6 +175,10 @@
      * @return XMLHttpRequest
      */
     kapi.request = function(opt) {
+        if (!settings) {
+            $.error('The plugin isn not initialized. Please call $.kapi() first!');
+        }
+
         if (!opt.service) {
             $.error('No "service" property passed in the options!');
         }

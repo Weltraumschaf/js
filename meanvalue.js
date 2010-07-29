@@ -165,5 +165,42 @@ var MeanValue = {
         shifted = number * shift;
 
         return Math.round(shifted) / shift;
+    },
+
+    /**
+     *
+     */
+    t: function() {
+        var summary = '', fails = '';
+        
+        function assert(that, message) {
+            if (!that) {
+                fails   += 'Failled ' + message + '\n';
+                summary += 'F';
+            } else {
+                summary += '.';
+            }
+        }
+
+        function printSummary() {
+            if (console && console.log) {
+                console.log(summary);
+
+                if (fails) {
+                    console.log(fails);
+                }
+            }
+        }
+
+        assert(MeanValue.round(3.1415)    === 3,
+               'rounding 3.1415 to 3');
+        assert(MeanValue.round(3.1415, 1) === 3.1,
+               'rounding 3.1415 to 3.1');
+        assert(MeanValue.round(3.1415, 2) === 3.14,
+               'rounding 3.1415 to 3.14');
+        assert(MeanValue.round(3.1415, 3) === 3.142,
+               'Assert rounding 3.1415 to 3.142.');
+
+        printSummary();
     }
 };

@@ -144,27 +144,18 @@ var MeanValue = {
      *
      * Example:
      * <code>
-     * MeanValue.round(3.1415); // -> 3
+     * MeanValue.round(3.1415);    // -> 3
      * MeanValue.round(3.1415, 1); // -> 3.1
      * MeanValue.round(3.1415, 2); // -> 3.14
      * MeanValue.round(3.1415, 3); // -> 3.142
      * </code>
      *
-     * @param  number        Number The number to round.
-     * @param  decimalDigits Number Amount of digits after decimal point.
+     * @param  number    Number The number to round.
+     * @param  precision Number Amount of digits after decimal point.
      * @return Number
      */
-    round: function(number, decimalDigits) {
-        var shifted, shift;
-
-        if (!decimalDigits || 0 === decimalDigits) {
-            return Math.round(number);
-        }
-
-        shift   = 10 * parseInt(decimalDigits, 10);
-        shifted = number * shift;
-
-        return Math.round(shifted) / shift;
+    round: function(number, precision) {
+        return parseFloat(number.toFixed(precision));
     },
 
     /**
@@ -172,6 +163,11 @@ var MeanValue = {
      */
     t: function() {
         var summary = '', fails = '';
+
+        function incomplete(message) {
+            summary += 'I';
+            fails   += 'Incomplete test: ' + message + '\n';
+        }
         
         function assert(that, message) {
             if (!that) {
@@ -183,15 +179,50 @@ var MeanValue = {
         }
 
         function printSummary() {
-            if (console && console.log) {
-                console.log(summary);
+//            if (console && console.log) {
+//                console.log(summary);
+//
+//                if (fails) {
+//                    console.log(fails);
+//                }
+//            } else {
+                document.write('<pre>');
+                document.write(summary);
 
                 if (fails) {
-                    console.log(fails);
+                    document.write('\n\n' + fails);
                 }
-            }
+
+                document.write('</pre>');
+//            }
         }
 
+        // testing MeanValue.arithmetic()
+        assert(MeanValue.arithmetic(1, 2, 3, 4, 5) === 3,
+               'arithmetic mean of 1, 2, 3, 4, 5 is 3');
+        assert(MeanValue.arithmetic.apply(null, [1, 2, 3, 4, 5]) === 3,
+               'arithmetic mean of 1, 2, 3, 4, 5 is 3');
+        assert(MeanValue.arithmetic(7, 7, 7, 7) === 7,
+               'arithmetic mean of 7, 7, 7, 7 is 7');
+
+        // testing MeanValue.geometric()
+        assert(MeanValue.geometric(1, 2, 3, 4, 5) - 2.60517 < 0.0001,
+               'arithmetic mean of 1, 2, 3, 4, 5 is 2.60517');
+        assert(MeanValue.geometric.apply(null, [1, 2, 3, 4, 5])  - 2.60517 < 0.0001,
+               'arithmetic mean of 1, 2, 3, 4, 5 is 2.60517');
+        assert(MeanValue.geometric(7, 7, 7, 7) === 7,
+               'arithmetic mean of 7, 7, 7, 7 is 7');
+
+        // testing MeanValue.harmonic()
+        incomplete('MeanValue.harmonic()');
+
+        // testing MeanValue.quadratic()
+        incomplete('MeanValue.quadratic()');
+
+        // testing MeanValue.cubic()
+        incomplete('MeanValue.cubic()');
+
+        // testing MeanValue.round()
         assert(MeanValue.round(3.1415)    === 3,
                'rounding 3.1415 to 3');
         assert(MeanValue.round(3.1415, 1) === 3.1,

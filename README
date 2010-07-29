@@ -1,1 +1,7 @@
 This repository contains unrelated JavaScript stuff.
+
+- jquery.kapi.js:
+  Is a jQuery plugin to access the KWICK! Social Platform API (http://developer.kwick.de/).
+  
+- meanvalue.js:
+  A lib for calculating different mean values.

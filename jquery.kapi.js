@@ -633,6 +633,10 @@
             }
         });
     };
+
+    kapi.t = function() {
+        
+    };
     
     // Expose plugin
     $.kapi = kapi;

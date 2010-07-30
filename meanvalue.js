@@ -34,13 +34,13 @@ var MeanValue = {
      * @return Number
      */
     arithmetic: function() {
-        var sum = 0;
+        var sum = 0, j= arguments.length, i=j;
 
-        for (var i = 0, j = arguments.length; i < j; i++) {
+        while( i--){
             sum += arguments[i];
         }
 
-        return sum / arguments.length;
+        return sum / j;
     },
 
     /**
@@ -59,13 +59,13 @@ var MeanValue = {
      * @return Number
      */
     geometric: function() {
-        var sum = 1;
+        var sum = 1, j= arguments.length, i=j;
 
-        for (var i = 0, j = arguments.length; i < j; i++) {
+        while( i--){
             sum *= arguments[i];
         }
 
-        return Math.pow(sum, 1 / arguments.length);
+        return Math.pow(sum, 1 / j);
     },
 
     /**
@@ -84,13 +84,13 @@ var MeanValue = {
      * @return Number
      */
     harmonic: function() {
-        var sum = 0;
+        var sum = 0, j= arguments.length, i=j;
 
-        for (var i = 0, j = arguments.length; i < j; i++) {
+        while( i--){
             sum += 1 / arguments[i];
         }
 
-        return arguments.length / sum;
+        return j / sum;
     },
 
     /**
@@ -109,13 +109,13 @@ var MeanValue = {
      * @return Number
      */
     quadratic: function() {
-        var sum = 0;
+        var sum = 0, j= arguments.length, i=j;
 
-        for (var i = 0, j = arguments.length; i < j; i++) {
+        while( i--){
             sum += Math.pow(arguments[i], 2);
         }
 
-        return Math.sqrt(sum / arguments.length);
+        return Math.sqrt(sum / j);
     },
 
     /**
@@ -134,13 +134,13 @@ var MeanValue = {
      * @return Number
      */
     cubic: function() {
-        var sum = 0;
+        var sum = 0, j=arguments.length, i=j;
 
-        for (var i = 0, j = arguments.length; i < j; i++) {
+        while( i--){
             sum += Math.pow(arguments[i], 3);
         }
 
-        return Math.pow(sum / arguments.length, 1 / 3);
+        return Math.pow(sum / j, 1 / 3);
     },
 
     /**

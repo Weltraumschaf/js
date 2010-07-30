@@ -11,6 +11,10 @@
 /**
  * Provides methods for calculating mean values in some ways.
  *
+ * For more information about the math see http://en.wikipedia.org/wiki/Mean.
+ *
+ * @author Sven Strittmatte <ich[at]weltraumschaf[dot]de>
+ * @version 1.0
  */
 var MeanValue = {
 

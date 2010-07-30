@@ -144,6 +144,33 @@ var MeanValue = {
     },
 
     /**
+     * Calculates the median of the given numbers. 
+     *
+     * Example:
+     * <code>
+     * var median = MeanValue.median( 1, 2, 3, 4, 5) // 3
+     * </code>
+     *
+     * You can also pass an array of numbers:
+     * <code>
+     * Manvalue.median.apply( null, [ 1, 2, 3, 4, 5]);
+     * </code>
+     *
+     * @return Number
+     */
+     median: (function(){
+        var sortfn = function( a,b){ return a-b; };
+        
+        return function(){
+            var arr = Array.prototype.sort.call( arguments, sortfn),
+                n = arr.length;
+            
+            return n & 1 ? arr[ Math.floor( n/2)] : ( arr[n/2] + arr[ n/2 -1 ] ) / 2 ;
+        };
+     
+     })(),
+
+    /**
      * Rounds the passed number to the given amaount of decimal digits.
      *
      * Example:
@@ -214,6 +241,10 @@ var MeanValue = {
                'cubic mean of 1, 2, 3, 4, 5 is 3.556893304');
         assert(Math.abs(MeanValue.cubic(7, 7, 7, 7) - 7) < delta,
                'cubic mean of 7, 7, 7, 7 is 7');
+               
+        // testing MeanValue.median()
+        assert( MeanValue.median( 1, 5, 2, 8, 7) === 5, 'median of 1,5,2,8,7 is 5');
+        assert( MeanValue.median( 1, 5, 2, 8, 7, 2) === 3.5, 'median of 1,2,2,5,7,8 is 3.5');
 
         // testing MeanValue.round()
         assert(MeanValue.round(3.1415)    === 3,

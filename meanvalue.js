@@ -11,6 +11,10 @@
 /**
  * Provides methods for calculating mean values in some ways.
  *
+ * For more information about the math see http://en.wikipedia.org/wiki/Mean.
+ *
+ * @author Sven Strittmatte <ich[at]weltraumschaf[dot]de>
+ * @version 1.0
  */
 var MeanValue = {
 
@@ -159,7 +163,9 @@ var MeanValue = {
     },
 
     /**
+     * Call this function to perform the unittests
      *
+     * This function requires a browsers document object.
      */
     t: function(options) {
         var delta   = 0.000000001,
@@ -168,7 +174,7 @@ var MeanValue = {
         if (!assert) {
             throw 'Pleas include assert.js for run tests!';
         }
-
+		
         // testing MeanValue.arithmetic()
         assert(MeanValue.arithmetic(1, 2, 3, 4, 5) === 3,
                'arithmetic mean of 1, 2, 3, 4, 5 is 3');

@@ -159,16 +159,46 @@ var MeanValue = {
     },
 
     /**
-     *
+     * Call this function to perform the unittests.
+	 *
+	 * This function requires a browsers document object.
      */
     t: function() {
-        var summary = '', fails = '', delta = 0.000000001;
+			/**
+			 * Collects the summary string.
+			 *
+			 * A period for passed, a F for failed and I for incomplete tests.
+			 *
+			 * @var String
+			 */
+        var summary = '', 
+			/**
+			 * Collects the assert messages on test fail.
+			 * 
+			 * @var String
+			 */
+			fails = '',
+			/**
+			 * The allowed maximum delta for floating equation.
+			 * 
+			 * @var Number
+			 */
+			delta = 0.000000001;
 
+		/**
+		 * Signals the presence of an incomplete test.
+		 */
         function incomplete(message) {
             summary += 'I';
             fails   += 'Incomplete test: ' + message + '\n';
         }
-        
+
+		/**
+		 * Assert that is true.
+		 *
+		 * @param that Bool
+		 * @param message String
+		 */
         function assert(that, message) {
             if (!that) {
                 fails   += 'Failled ' + message + '\n';
@@ -178,7 +208,14 @@ var MeanValue = {
             }
         }
 
+		/**
+		 * Prints the test summary after all tests.
+		 */
         function printSummary() {
+			if (!document) {
+				throw 'Does not have browser document object!';
+			}
+			
             document.write('<pre>');
             document.write(summary);
 

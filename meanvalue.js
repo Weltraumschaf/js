@@ -162,7 +162,7 @@ var MeanValue = {
      *
      */
     t: function() {
-        var summary = '', fails = '';
+        var summary = '', fails = '', delta = 0.000000001;
 
         function incomplete(message) {
             summary += 'I';
@@ -179,22 +179,14 @@ var MeanValue = {
         }
 
         function printSummary() {
-//            if (console && console.log) {
-//                console.log(summary);
-//
-//                if (fails) {
-//                    console.log(fails);
-//                }
-//            } else {
-                document.write('<pre>');
-                document.write(summary);
+            document.write('<pre>');
+            document.write(summary);
 
-                if (fails) {
-                    document.write('\n\n' + fails);
-                }
+            if (fails) {
+                document.write('\n\n' + fails);
+            }
 
-                document.write('</pre>');
-//            }
+            document.write('</pre>');
         }
 
         // testing MeanValue.arithmetic()
@@ -206,21 +198,36 @@ var MeanValue = {
                'arithmetic mean of 7, 7, 7, 7 is 7');
 
         // testing MeanValue.geometric()
-        assert(MeanValue.geometric(1, 2, 3, 4, 5) - 2.60517 < 0.0001,
-               'arithmetic mean of 1, 2, 3, 4, 5 is 2.60517');
-        assert(MeanValue.geometric.apply(null, [1, 2, 3, 4, 5])  - 2.60517 < 0.0001,
-               'arithmetic mean of 1, 2, 3, 4, 5 is 2.60517');
+        assert(Math.abs(MeanValue.geometric(1, 2, 3, 4, 5) - 2.605171085) < delta,
+               'geometric mean of 1, 2, 3, 4, 5 is 2.605171085');
+        assert(Math.abs(MeanValue.geometric.apply(null, [1, 2, 3, 4, 5])  - 2.605171085) < delta,
+               'geometric mean of 1, 2, 3, 4, 5 is 2.605171085');
         assert(MeanValue.geometric(7, 7, 7, 7) === 7,
-               'arithmetic mean of 7, 7, 7, 7 is 7');
+               'geometric mean of 7, 7, 7, 7 is 7');
 
         // testing MeanValue.harmonic()
-        incomplete('MeanValue.harmonic()');
+        assert(Math.abs(MeanValue.harmonic(1, 2, 3, 4, 5) - 2.189781022) < delta,
+               'harmonic mean of 1, 2, 3, 4, 5 is 2.189781022');
+        assert(Math.abs(MeanValue.harmonic.apply(null, [1, 2, 3, 4, 5]) - 2.189781022) < delta,
+               'harmonic mean of 1, 2, 3, 4, 5 is 2.189781022');
+        assert(MeanValue.harmonic(7, 7, 7, 7) === 7,
+               'harmonic mean of 7, 7, 7, 7 is 7');
 
         // testing MeanValue.quadratic()
-        incomplete('MeanValue.quadratic()');
+        assert(Math.abs(MeanValue.quadratic(1, 2, 3, 4, 5) - 3.31662479) < delta,
+               'quadratic mean of 1, 2, 3, 4, 5 is 3.31662479');
+        assert(Math.abs(MeanValue.quadratic.apply(null, [1, 2, 3, 4, 5]) - 3.31662479) < delta,
+               'quadratic mean of 1, 2, 3, 4, 5 is 3.31662479');
+        assert(MeanValue.quadratic(7, 7, 7, 7) === 7,
+               'quadratic mean of 7, 7, 7, 7 is 7');
 
         // testing MeanValue.cubic()
-        incomplete('MeanValue.cubic()');
+        assert(Math.abs(MeanValue.cubic(1, 2, 3, 4, 5) - 3.556893304) < delta,
+               'cubic mean of 1, 2, 3, 4, 5 is 3.556893304');
+        assert(Math.abs(MeanValue.cubic.apply(null, [1, 2, 3, 4, 5]) - 3.556893304) < delta,
+               'cubic mean of 1, 2, 3, 4, 5 is 3.556893304');
+        assert(Math.abs(MeanValue.cubic(7, 7, 7, 7) - 7) < delta,
+               'cubic mean of 7, 7, 7, 7 is 7');
 
         // testing MeanValue.round()
         assert(MeanValue.round(3.1415)    === 3,

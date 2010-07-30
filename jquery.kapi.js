@@ -635,7 +635,7 @@
     };
 
     kapi.t = function() {
-        
+        console.log(1);
     };
     
     // Expose plugin

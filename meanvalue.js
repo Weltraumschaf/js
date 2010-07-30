@@ -171,7 +171,7 @@ var MeanValue = {
         var delta   = 0.000000001,
             verbose = (options === 'verbose') ? true : false;
 
-        if (!assert) {
+        if (!window.assert) {
             throw 'Pleas include assert.js for run tests!';
         }
 		

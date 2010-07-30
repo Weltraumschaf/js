@@ -63,13 +63,6 @@
             return rstr2any(rstr_hmac_md5(str2rstr_utf8(k), str2rstr_utf8(d)), e);
         }
 
-        /*
-         * Perform a simple self-test to see if the VM is working
-         */
-        function md5_vm_test() {
-          return hex_md5("abc").toLowerCase() === "900150983cd24fb0d6963f7d28e17f72";
-        }
-
         /**
          * Calculate the MD5 of a raw string
          */
@@ -635,7 +628,17 @@
     };
 
     kapi.t = function() {
-        console.log(1);
+        if (!window.assert) {
+            throw 'Pleas include assert.js for run tests!';
+        }
+
+        // testing md5
+        assert(md5('abc') === '900150983cd24fb0d6963f7d28e17f72',
+               'md5 of "abc" is 900150983cd24fb0d6963f7d28e17f72');
+        assert(md5('Weltraumschaf') === 'c7915f7f245b1ca1bf5bc67caf936309',
+               'md5 of "Weltraumschaf" is c7915f7f245b1ca1bf5bc67caf936309');
+
+        printSummary();
     };
     
     // Expose plugin

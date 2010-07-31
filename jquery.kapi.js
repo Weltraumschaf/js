@@ -441,6 +441,9 @@
     /**
      * Generates the md5 hashed signature of the passed parameters.
      *
+     * With the third optional parameter 'hash' you cabn disable the md5 hashing
+     * of the signature. This is only usefull for debbugging and testing purposes.
+     * 
      * @param parameters Object
      * @param secret     String
      * @param hash       Bool   Default is true.

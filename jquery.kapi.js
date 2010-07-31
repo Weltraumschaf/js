@@ -428,34 +428,6 @@
     })();
         
     /**
-     * Utilizes firebug console if available.
-     * Logging could be enabled by $.kapi() options.
-     */
-    function log(msg) {
-        if (!settings.debug) {
-            return;
-        }
-
-        if (global.console && global.console.log && $.isFunction(global.console.log)) {
-            global.console.log(msg);
-        }
-    }
-
-    /**
-     * Utilizes firebug console if available.
-     * Debugging could be enabled by $.kapi() options.
-     */
-    function debug() {
-        if (!settings.debug) {
-            return;
-        }
-
-        if (global.console && global.console.debug && $.isFunction(global.console.debug)) {
-            global.console.debug.apply(null, arguments);
-        }
-    }
-
-    /**
      * Generates the full qualified method name.
      *
      * @param  service String
@@ -470,27 +442,35 @@
      * Generates the md5 hashed signature of the passed parameters.
      *
      * @param parameters Object
+     * @param secret     String
+     * @param hash       Bool   Default is true.
      * @return String
      */
-    function generateSignature(parameters) {
+    function generateSignature(parameters, secret, hash) {
         var parameterString = '',
-            parameterNames  = [],
-            sortedNames;
+            parameterNames  = [];
 
-        if ($(parameters).size() > 0) {
-            $.each(parameters, function(name) {
+        hash = (typeof(hash) === 'undefined') ?true : hash;
+        
+        if (!$.isEmptyObject(parameters)) {
+            for (name in parameters) {
                 parameterNames.push(name);
-            });
-            log('Generating signature with: ' + parameterNames);
-            sortedNames = parameterNames.sort();
-            $.each(sortedNames, function(index) {
-                var name  = sortedNames[index];
+            }
+            
+            parameterNames = parameterNames.sort();
+            i = parameterNames.length;
+
+            for (var i = 0, length = parameterNames.length, name; i < length; i++) {
+                name = parameterNames[i];
                 parameterString += name + '=' + parameters[name];
-            });
-            log('Plain parameter string: ' + parameterString);
+            }
         }
 
-        return md5(parameterString + settings.secret);
+        if (hash) {
+            return md5(parameterString + secret);
+        } else {
+            return parameterString + secret;
+        }
     }
 
     /**
@@ -508,14 +488,12 @@
         uri += 'api_key=' + settings.apiKey  + '&';
         uri += 'v='       + settings.version + '&';
         uri += 'method='  + qualifiedMethod  + '&';
-        uri += 'sig='     + generateSignature(settings.apiKey,
-                                              settings.version,
-                                              settings.secret,
-                                              $.extend({}, parameters, {
+        uri += 'sig='     + generateSignature($.extend({}, parameters, {
                                                   'api_key': settings.apiKey,
                                                    'v':      settings.version,
                                                    'method': qualifiedMethod
-                                              }));
+                                              }),
+                                              settings.secret);
 
         if ($(parameters).size() > 0) {
             $.each(parameters, function(name, value) {
@@ -551,8 +529,7 @@
         baseUri: 'http://api.kwick.de/service/2.0/',
         version: '2.0',
         apiKey:  null,
-        secret:  null,
-        debug:   false
+        secret:  null
     };
 
     /**
@@ -639,10 +616,20 @@
                'md5 of "Weltraumschaf" is c7915f7f245b1ca1bf5bc67caf936309');
 
         // testing getQualifiedMethod()
-        incomplete('getQualifiedMethod()');
+        assert(getQualifiedMethod('foo', 'bar') === 'foo.bar',
+               'foo, bar becomes foo.bar');
+        assert(getQualifiedMethod('User', 'getVCard') === 'User.getVCard',
+               'User, getVCard becomes fUseroo.getVCard');
 
-        // testing generateSignature()
-        incomplete('generateSignature()');
+        // testing generateSignature(parameters, secret, hash) withot md5
+        assert(generateSignature({}, 'secret', false) === 'secret',
+               generateSignature({}, 'secret', false) + ' === secret');
+        assert(generateSignature({a: 1, c: 3, b:2}, 'secret', false) === 'a=1b=2c=3secret',
+               generateSignature({a: 1, c: 3, b:2}, 'secret', false) + ' === a=1b=2c=3secret');
+        assert(generateSignature({firstArg: 'bla', second_arg: 'blub'}, 'secret', false)
+                                 === 'firstArg=blasecond_arg=blubsecret',
+               generateSignature({firstArg: 'bla', second_arg: 'blub'}, 'secret', false) +
+                                ' === firstArg=blasecond_arg=blubsecret');
 
         // testing generateUri()
         incomplete('generateUri()');

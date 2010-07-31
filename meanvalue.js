@@ -34,9 +34,9 @@ var MeanValue = {
      * @return Number
      */
     arithmetic: function() {
-        var sum = 0, j= arguments.length, i=j;
+        var sum = 0, j = arguments.length, i = j;
 
-        while( i--){
+        while (i--) {
             sum += arguments[i];
         }
 
@@ -59,9 +59,9 @@ var MeanValue = {
      * @return Number
      */
     geometric: function() {
-        var sum = 1, j= arguments.length, i=j;
+        var sum = 1, j = arguments.length, i = j;
 
-        while( i--){
+        while (i--) {
             sum *= arguments[i];
         }
 
@@ -84,9 +84,9 @@ var MeanValue = {
      * @return Number
      */
     harmonic: function() {
-        var sum = 0, j= arguments.length, i=j;
+        var sum = 0, j = arguments.length, i = j;
 
-        while( i--){
+        while (i--){
             sum += 1 / arguments[i];
         }
 
@@ -109,9 +109,9 @@ var MeanValue = {
      * @return Number
      */
     quadratic: function() {
-        var sum = 0, j= arguments.length, i=j;
+        var sum = 0, j = arguments.length, i = j;
 
-        while( i--){
+        while (i--) {
             sum += Math.pow(arguments[i], 2);
         }
 
@@ -134,9 +134,9 @@ var MeanValue = {
      * @return Number
      */
     cubic: function() {
-        var sum = 0, j=arguments.length, i=j;
+        var sum = 0, j = arguments.length, i = j;
 
-        while( i--){
+        while (i--) {
             sum += Math.pow(arguments[i], 3);
         }
 
@@ -163,7 +163,7 @@ var MeanValue = {
         
         return function(){
             var arr = Array.prototype.sort.call( arguments, sortfn),
-                n = arr.length;
+                n   = arr.length;
             
             return n & 1 ? arr[ Math.floor( n/2)] : ( arr[n/2] + arr[ n/2 -1 ] ) / 2 ;
         };

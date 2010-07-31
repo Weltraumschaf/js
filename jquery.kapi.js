@@ -632,12 +632,24 @@
             throw 'Pleas include assert.js for run tests!';
         }
 
-        // testing md5
+        // testing md5()
         assert(md5('abc') === '900150983cd24fb0d6963f7d28e17f72',
                'md5 of "abc" is 900150983cd24fb0d6963f7d28e17f72');
         assert(md5('Weltraumschaf') === 'c7915f7f245b1ca1bf5bc67caf936309',
                'md5 of "Weltraumschaf" is c7915f7f245b1ca1bf5bc67caf936309');
 
+        // testing getQualifiedMethod()
+        incomplete('getQualifiedMethod()');
+
+        // testing generateSignature()
+        incomplete('generateSignature()');
+
+        // testing generateUri()
+        incomplete('generateUri()');
+
+        // testing $.kapi()
+        incomplete('$.kapi()');
+        
         printSummary();
     };
     

@@ -50,6 +50,7 @@
      * Prints the test summary after all tests.
      */
     function printSummary(verbose) {
+        global.document.open();
         global.document.write('<pre>');
         global.document.write(summary);
 
@@ -62,6 +63,7 @@
         }
 
         global.document.write('</pre>');
+        global.document.close();
     }
 
     global.incomplete   = incomplete;

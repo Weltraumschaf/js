@@ -19,7 +19,13 @@
          * 
          * @var String
          */
-        assertions = '';
+        assertions = '',
+        /**
+         * Number of runned asertions.
+         *
+         * @var Number
+         */
+        assertionsCnt = 0;
 
     /**
      * Signals the presence of an incomplete test.
@@ -44,6 +50,7 @@
         }
 
         assertions += 'Assert that ' + message + '.\n';
+        assertionsCnt++;
     }
 
     /**
@@ -53,6 +60,7 @@
         global.document.open();
         global.document.write('<pre>');
         global.document.write(summary);
+        global.document.write('\n\nAssertions: ' + assertionsCnt);
 
         if (fails) {
             global.document.write('\n\n' + fails);

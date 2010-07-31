@@ -34,13 +34,13 @@ var MeanValue = {
      * @return Number
      */
     arithmetic: function() {
-        var sum = 0, j = arguments.length, i = j;
+        var sum = 0, length = arguments.length, i = length;
 
         while (i--) {
             sum += arguments[i];
         }
 
-        return sum / j;
+        return sum / length;
     },
 
     /**
@@ -59,13 +59,13 @@ var MeanValue = {
      * @return Number
      */
     geometric: function() {
-        var sum = 1, j = arguments.length, i = j;
+        var sum = 1, length = arguments.length, i = length;
 
         while (i--) {
             sum *= arguments[i];
         }
 
-        return Math.pow(sum, 1 / j);
+        return Math.pow(sum, 1 / length);
     },
 
     /**
@@ -84,13 +84,13 @@ var MeanValue = {
      * @return Number
      */
     harmonic: function() {
-        var sum = 0, j = arguments.length, i = j;
+        var sum = 0, length = arguments.length, i = length;
 
         while (i--){
             sum += 1 / arguments[i];
         }
 
-        return j / sum;
+        return length / sum;
     },
 
     /**

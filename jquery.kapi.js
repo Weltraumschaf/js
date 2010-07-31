@@ -621,7 +621,7 @@
         assert(getQualifiedMethod('User', 'getVCard') === 'User.getVCard',
                'User, getVCard becomes fUseroo.getVCard');
 
-        // testing generateSignature(parameters, secret, hash) withot md5
+        // testing generateSignature(parameters, secret, hash) without md5
         assert(generateSignature({}, 'secret', false) === 'secret',
                generateSignature({}, 'secret', false) + ' === secret');
         assert(generateSignature({a: 1, c: 3, b:2}, 'secret', false) === 'a=1b=2c=3secret',
@@ -630,7 +630,15 @@
                                  === 'firstArg=blasecond_arg=blubsecret',
                generateSignature({firstArg: 'bla', second_arg: 'blub'}, 'secret', false) +
                                 ' === firstArg=blasecond_arg=blubsecret');
-
+        // testing generateSignature(parameters, secret, hash) with md5
+        assert(generateSignature({}, 'secret') === md5('secret'),
+               generateSignature({}, 'secret') + ' === ' + md5('secret'));
+        assert(generateSignature({a: 1, c: 3, b:2}, 'secret') === md5('a=1b=2c=3secret'),
+               generateSignature({a: 1, c: 3, b:2}, 'secret') + ' === ' + md5('a=1b=2c=3secret'));
+        assert(generateSignature({firstArg: 'bla', second_arg: 'blub'}, 'secret')
+                                 === md5('firstArg=blasecond_arg=blubsecret'),
+               generateSignature({firstArg: 'bla', second_arg: 'blub'}, 'secret') +
+                                ' === ' + md5('firstArg=blasecond_arg=blubsecret'));
         // testing generateUri()
         incomplete('generateUri()');
 

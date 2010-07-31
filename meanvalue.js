@@ -109,13 +109,13 @@ var MeanValue = {
      * @return Number
      */
     quadratic: function() {
-        var sum = 0, j = arguments.length, i = j;
+        var sum = 0, length = arguments.length, i = length;
 
         while (i--) {
             sum += Math.pow(arguments[i], 2);
         }
 
-        return Math.sqrt(sum / j);
+        return Math.sqrt(sum / length);
     },
 
     /**
@@ -134,13 +134,13 @@ var MeanValue = {
      * @return Number
      */
     cubic: function() {
-        var sum = 0, j = arguments.length, i = j;
+        var sum = 0, length = arguments.length, i = length;
 
         while (i--) {
             sum += Math.pow(arguments[i], 3);
         }
 
-        return Math.pow(sum / j, 1 / 3);
+        return Math.pow(sum / length, 1 / 3);
     },
 
     /**
@@ -159,15 +159,18 @@ var MeanValue = {
      * @return Number
      */
      median: (function(){
-        var sortfn = function( a,b){ return a-b; };
+        var sortfn = function(a, b) { return a - b; };
         
-        return function(){
-            var arr = Array.prototype.sort.call( arguments, sortfn),
-                n   = arr.length;
+        return function() {
+            var sortedArgs = Array.prototype.sort.call(arguments, sortfn),
+                length     = sortedArgs.length;
             
-            return n & 1 ? arr[ Math.floor( n/2)] : ( arr[n/2] + arr[ n/2 -1 ] ) / 2 ;
+            if (length & 1) {
+                return sortedArgs[ Math.floor( length / 2 )];
+            } else {
+                return ( sortedArgs[ length / 2] + sortedArgs[ length / 2 - 1 ] ) / 2;
+            }
         };
-     
      })(),
 
     /**
@@ -254,7 +257,7 @@ var MeanValue = {
         assert(MeanValue.round(3.1415, 2) === 3.14,
                'rounding 3.1415 to 3.14');
         assert(MeanValue.round(3.1415, 3) === 3.142,
-               'Assert rounding 3.1415 to 3.142');
+               'rounding 3.1415 to 3.142');
 
         printSummary(verbose);
     }

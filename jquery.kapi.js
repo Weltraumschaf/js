@@ -554,7 +554,11 @@
      * Determines if a given object is an API error response.
      */
     kapi.isError = function(o) {
-        return ('error_code' in o && 'error_msg' in o);
+        if (o) {
+            return ('error_code' in o && 'error_msg' in o);
+        }
+
+        return false;
     };
 
     /**
@@ -678,7 +682,23 @@
 
         // testing $.kapi()
         incomplete('$.kapi()');
-        
+
+        // testing kapi.isError()
+        assert(kapi.isError({error_code: 0, error_msg: ''}) === true, 
+               '{error_code: 0, error_msg: ""} is error object.');
+        assert(kapi.isError({error_code: 0, error_msg: '', foo: 'bar'}) === true,
+               '{error_code: 0, error_msg: "", foo: "bar"} is error object.');
+        assert(kapi.isError({error_code: 0}) === false,
+               '{error_code: 0} is not error object.');
+        assert(kapi.isError({error_msg: '', foo: 'bar'}) === false,
+               '{error_msg: "", foo: "bar"} is not error object.');
+        assert(kapi.isError({foo: 'bar'}) === false,
+               '{foo: "bar"} is not error object.');
+        assert(kapi.isError({}) === false,
+               '{} is not error object.');
+        assert(kapi.isError() === false,
+               '"undefined" is not error object.');
+
         printSummary();
     };
     

@@ -461,7 +461,6 @@
             }
             
             parameterNames = parameterNames.sort();
-            i = parameterNames.length;
 
             for (var i = 0, length = parameterNames.length, name; i < length; i++) {
                 name = parameterNames[i];
@@ -479,31 +478,47 @@
     /**
      * Generates the full reuqest URI for an API call.
      *
+     * Options must contain theese properties:
+     * <code>
+     * options = {
+     *     apiKey:  'YOUR_API_KEY',
+     *     version: '2.0',                          // The used API version
+     *     baseUri: 'http://api.kwick.de/service/', // The base URI to the API service.
+     *     secret:  'YOUR_API_SECRET'
+     * }
+     * </code>
+     *
      * @param  service    String
      * @param  method     String
+     * @param  options    Object
      * @param  parameters Object
      * @return String
      */
-    function generateUri(service, method, parameters) {
-        var uri = settings.baseUri  + '?',
-            qualifiedMethod = getQualifiedMethod(service, method);
+    function generateUri(service, method, options, parameters) {
+        var qualifiedMethod = getQualifiedMethod(service, method),
+            uri = options.baseUri;
 
-        uri += 'api_key=' + settings.apiKey  + '&';
-        uri += 'v='       + settings.version + '&';
-        uri += 'method='  + qualifiedMethod  + '&';
-        uri += 'sig='     + generateSignature($.extend({}, parameters, {
-                                                  'api_key': settings.apiKey,
-                                                   'v':      settings.version,
-                                                   'method': qualifiedMethod
-                                              }),
-                                              settings.secret);
-
-        if ($(parameters).size() > 0) {
-            $.each(parameters, function(name, value) {
-                uri += '&' + name  + '='  + value;
-            });
+        if (uri.charAt(uri.length - 1) !== '/') {
+            uri += '/';
         }
 
+        uri += options.version + '/?';
+        uri += 'api_key=' + options.apiKey  + '&';
+        uri += 'v='       + options.version + '&';
+        uri += 'method='  + qualifiedMethod  + '&';
+        uri += 'sig='     + generateSignature($.extend({}, parameters || {}, {
+                                                  'api_key': options.apiKey,
+                                                   'v':      options.version,
+                                                   'method': qualifiedMethod
+                                              }),
+                                              options.secret);
+
+        if (!$.isEmptyObject(parameters)) {
+            for (name in parameters) {
+                uri += '&' + name  + '='  + parameters[name];
+            }
+        }
+        
         return uri;
     }
 
@@ -529,7 +544,7 @@
      * Default settings.
      */
     kapi.defaultSettings = {
-        baseUri: 'http://api.kwick.de/service/2.0/',
+        baseUri: 'http://api.kwick.de/service/',
         version: '2.0',
         apiKey:  null,
         secret:  null
@@ -608,7 +623,9 @@
     };
 
     kapi.t = function() {
-        if (!window.assert) {
+        var options; // fixture
+
+        if (!global.assert) {
             throw 'Pleas include assert.js for run tests!';
         }
 
@@ -642,8 +659,22 @@
                                  === md5('firstArg=blasecond_arg=blubsecret'),
                generateSignature({firstArg: 'bla', second_arg: 'blub'}, 'secret') +
                                 ' === ' + md5('firstArg=blasecond_arg=blubsecret'));
-        // testing generateUri()
-        incomplete('generateUri()');
+
+        // testing generateUri(service, method, options, parameters)
+        options = {
+            apiKey:  'YOUR_API_KEY',
+            version: '2.0',
+            baseUri: 'http://api.kwick.de/service/',
+            secret:  'YOUR_API_SECRET'
+        };
+        assert(generateUri('service', 'method', options) === 
+               'http://api.kwick.de/service/2.0/?api_key=YOUR_API_KEY&v=2.0&method=service.method&sig=fb81f94126805f36abfa17f9bdaeedc0',
+               generateUri('service', 'method', options) + 
+               ' === http://api.kwick.de/service/2.0/?api_key=YOUR_API_KEY&v=2.0&method=service.method&sig=fb81f94126805f36abfa17f9bdaeedc0');
+        assert(generateUri('service', 'method', options, {a: 1, c: 3, b:2}) ===
+               'http://api.kwick.de/service/2.0/?api_key=YOUR_API_KEY&v=2.0&method=service.method&sig=7d1e85320266b577f9f89d3c1d2dc653&a=1&c=3&b=2',
+               generateUri('service', 'method', options, {a: 1, c: 3, b:2}) +
+               ' === http://api.kwick.de/service/2.0/?api_key=YOUR_API_KEY&v=2.0&method=service.method&sig=7d1e85320266b577f9f89d3c1d2dc653&a=1&c=3&b=2');
 
         // testing $.kapi()
         incomplete('$.kapi()');

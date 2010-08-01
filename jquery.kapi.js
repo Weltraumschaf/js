@@ -627,10 +627,21 @@
     };
 
     kapi.t = function() {
-        var options; // fixture
+        var argsCnt  = arguments.length, 
+            verbose  = false,
+            withAjax = true,
+            options; // fixture
 
         if (!global.assert) {
             throw 'Pleas include assert.js for run tests!';
+        }
+
+        while (argsCnt--) {
+            if ('verbose' === (arguments[argsCnt] + '').toLowerCase()) {
+                verbose = true;
+            } else if ('withoutajax' === (arguments[argsCnt] + '').toLowerCase()) {
+                withAjax = false;
+            }
         }
 
         // testing md5()
@@ -683,7 +694,7 @@
         // testing $.kapi()
         incomplete('$.kapi()');
 
-        // testing kapi.isError()
+        // testing $.kapi.isError()
         assert(kapi.isError({error_code: 0, error_msg: ''}) === true, 
                '{error_code: 0, error_msg: ""} is error object.');
         assert(kapi.isError({error_code: 0, error_msg: '', foo: 'bar'}) === true,
@@ -699,7 +710,14 @@
         assert(kapi.isError() === false,
                '"undefined" is not error object.');
 
-        printSummary();
+        if (withAjax) {
+            // $.kapi.request()
+            incomplete('$.kapi.request()');
+        } else {
+            skip('$.kapi.request()');
+        }
+
+        printSummary(verbose);
     };
     
     // Expose plugin

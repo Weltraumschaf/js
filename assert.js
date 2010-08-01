@@ -36,6 +36,14 @@
     }
 
     /**
+     * Signals the presence of an skipped test.
+     */
+    function skip(message) {
+        summary += 'S';
+        fails   += 'Skipped test: ' + message + '.\n';
+    }
+
+    /**
      * Assert that is true.
      *
      * @param that Bool
@@ -75,6 +83,7 @@
     }
 
     global.incomplete   = incomplete;
+    global.skip         = skip;
     global.assert       = assert;
     global.printSummary = printSummary;
     

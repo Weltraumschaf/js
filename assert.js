@@ -32,7 +32,7 @@
      */
     function incomplete(message) {
         summary += 'I';
-        fails   += 'Incomplete test: ' + message + '.\n';
+        fails   += 'Incomplete test: ' + message + '.<br/>';
     }
 
     /**
@@ -40,7 +40,7 @@
      */
     function skip(message) {
         summary += 'S';
-        fails   += 'Skipped test: ' + message + '.\n';
+        fails   += 'Skipped test: ' + message + '.<br/>';
     }
 
     /**
@@ -51,13 +51,13 @@
      */
     function assert(that, message) {
         if (!that) {
-            fails   += 'Failled that ' + message + '.\n';
+            fails   += 'Failled that ' + message + '.<br/>';
             summary += 'F';
         } else {
             summary += '.';
         }
 
-        assertions += 'Assert that ' + message + '.\n';
+        assertions += 'Assert that ' + message + '.<br/>';
         assertionsCnt++;
     }
 
@@ -66,19 +66,19 @@
      */
     function printSummary(verbose) {
         global.document.open();
-        global.document.write('<pre>');
+        global.document.write('<kbd>');
         global.document.write(summary);
-        global.document.write('\n\nAssertions: ' + assertionsCnt);
+        global.document.write('<br/><br/>Assertions: ' + assertionsCnt);
 
         if (fails) {
-            global.document.write('\n\n' + fails);
+            global.document.write('<br/><br/>' + fails);
         }
 
         if (verbose || false) {
-            global.document.write('\n\n' + assertions);
+            global.document.write('<br/><br/>' + assertions);
         }
 
-        global.document.write('</pre>');
+        global.document.write('</kbd>');
         global.document.close();
     }
 

@@ -33,7 +33,7 @@
          * the server-side, but the defaults work in most cases.
          */
         var hexcase = 0;   /* hex output format. 0 - lowercase; 1 - uppercase        */
-        var b64pad  = "";  /* base-64 pad character. "=" for strict RFC compliance   */
+        var b64pad  = '';  /* base-64 pad character. "=" for strict RFC compliance   */
 
         /*
          * These are the functions you'll usually want to call
@@ -96,8 +96,6 @@
          * Convert a raw string to a hex string
          */
         function rstr2hex(input) {
-            try { hexcase } catch(e) { hexcase=0; }
-
             var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef",
                 output = "",
                 x;
@@ -115,8 +113,6 @@
          * Convert a raw string to a base-64 string
          */
         function rstr2b64(input) {
-            try { b64pad } catch(e) { b64pad=''; }
-
             var tab    = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
                 output = "",
                 len    = input.length;

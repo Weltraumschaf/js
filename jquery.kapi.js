@@ -596,13 +596,13 @@
             $.error('No "callback" function property passed in the options!');
         }
 
-        if (!$.isFunction()) {
+        if (!$.isFunction(opt.callback)) {
             $.error('The passed callback option is not a function!');
         }
 
         return $.ajax({
             type:     opt.type || 'GET',
-            url:      generateUri(opt.service, opt.method, opt.params),
+            url:      generateUri(opt.service, opt.method, settings, opt.params),
             success: function(data) {
                 if (!$.isPlainObject(data)) {
                     $.error('No valid object returnd by Ajax response!');
@@ -612,9 +612,9 @@
                     data.toString = function() {
                         return 'Error: ' + data.error_msg + ' [' + data.error_code + ']';
                     };
-                    data.isError = function() { return true; }
+                    data.isError = function() {return true;}
                 } else {
-                    data.isError = function() { return false; }
+                    data.isError = function() {return false;}
                 }
 
                 opt.callback(data);
@@ -723,7 +723,8 @@
                'settings.secret is "78df3fcefbc73f097d1c581eeaa5e402"');
         assert(settings.version === '1.0',
                'settings.version is "1.0"');
-
+        settings = {};
+        
         // testing $.kapi.isError()
         assert(kapi.isError({error_code: 0, error_msg: ''}) === true, 
                '{error_code: 0, error_msg: ""} is error object.');
@@ -742,7 +743,19 @@
 
         if (withAjax) {
             // $.kapi.request()
-            incomplete('$.kapi.request()');
+            $.kapi({
+                apiKey: '98a41829e5b8a867f285c539df62827b',
+                secret: '9f78b6c3730874ce4bb66483c4b59b9e'
+            });
+            $.kapi.request({
+                service: 'Application',
+                method:  'getAPIVersion',
+                callback: function(data) {
+                    assert(data.major_version === 2, 'major_version is 2');
+                    assert(data.minor_version === 0, 'minor_version is 0');
+                    assert(!data.isError(), 'isError returns true');
+                }
+            });
         } else {
             skip('$.kapi.request()');
         }

@@ -563,7 +563,6 @@
      * Example:
      * <code>
      * $.kapi.request({
-     *     type:    'POST',          // optional, default is GET
      *     service: 'Application',   // api service name (REQUIRED)
      *     method:  'getAPIVersion', // api method name (REQUIRED)
      *     params:  {                // optional api method parameters
@@ -601,7 +600,7 @@
         }
 
         return $.ajax({
-            type:     opt.type || 'GET',
+            type:     'GET',
             url:      generateUri(opt.service, opt.method, settings, opt.params),
             success: function(data) {
                 if (!$.isPlainObject(data)) {

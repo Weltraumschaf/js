@@ -15,7 +15,7 @@
  * direct in JavaScript without any proxy stuff.
  */
 (function($, global) {
-    var settings, kapi, md5;
+    var settings = {}, kapi, md5;
 
     // enclose a foreign md5 lib
     (function() {
@@ -533,7 +533,7 @@
      * </code>
      */
     kapi = function(origSettings) {
-        settings = $.extend(true, {}, kapi.defaultSettings, origSettings);
+        settings = $.extend(true, settings, kapi.defaultSettings, origSettings);
     };
 
     /**
@@ -688,7 +688,41 @@
                ' === http://api.kwick.de/service/2.0/?api_key=YOUR_API_KEY&v=2.0&method=service.method&sig=7d1e85320266b577f9f89d3c1d2dc653&a=1&c=3&b=2');
 
         // testing $.kapi()
-        incomplete('$.kapi()');
+        assert($.isEmptyObject(settings), 'settings is an empty object');
+        $.kapi();
+        assert(settings.apiKey === $.kapi.defaultSettings.apiKey,
+               'settings.apiKey is ' + $.kapi.defaultSettings.apiKey);
+        assert(settings.baseUri === $.kapi.defaultSettings.baseUri,
+               'settings.baseUri is ' + $.kapi.defaultSettings.baseUri);
+        assert(settings.secret === $.kapi.defaultSettings.secret,
+               'settings.secret is ' + $.kapi.defaultSettings.secret);
+        assert(settings.version === $.kapi.defaultSettings.version,
+               'settings.version is ' + $.kapi.defaultSettings.version);
+
+        $.kapi({apiKey: 'foo', secret: 'bar'});
+        assert(settings.apiKey === 'foo',
+               'settings.apiKey is "foo"');
+        assert(settings.baseUri === $.kapi.defaultSettings.baseUri,
+               'settings.baseUri is ' + $.kapi.defaultSettings.baseUri);
+        assert(settings.secret === 'bar',
+               'settings.secret is "bar"');
+        assert(settings.version === $.kapi.defaultSettings.version,
+               'settings.version is ' + $.kapi.defaultSettings.version);
+
+        $.kapi({
+            apiKey: 'cfb1a27ea5b9ecd96f5d9052cb193528',
+            secret: '78df3fcefbc73f097d1c581eeaa5e402',
+            version: '1.0',
+            baseUri: 'http://www.bla.de/api/'
+        });
+        assert(settings.apiKey === 'cfb1a27ea5b9ecd96f5d9052cb193528',
+               'settings.apiKey is "cfb1a27ea5b9ecd96f5d9052cb193528"');
+        assert(settings.baseUri === 'http://www.bla.de/api/',
+               'settings.baseUri is "http://www.bla.de/api/"');
+        assert(settings.secret === '78df3fcefbc73f097d1c581eeaa5e402',
+               'settings.secret is "78df3fcefbc73f097d1c581eeaa5e402"');
+        assert(settings.version === '1.0',
+               'settings.version is "1.0"');
 
         // testing $.kapi.isError()
         assert(kapi.isError({error_code: 0, error_msg: ''}) === true, 
